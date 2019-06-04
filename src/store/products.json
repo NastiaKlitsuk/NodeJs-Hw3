@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "categoryId": "1",
+    "name": "Fisher-Price Infant-to-Toddler Rocker, Dark Safari",
+    "itemsInStock": 10
+  },
+  {
+    "id": "2",
+    "categoryId": "1",
+    "name": "Graco Pack 'n Play Quilted Playard Sheet, Stone Gray",
+    "itemsInStock": 6
+  },
+  {
+    "id": "3",
+    "categoryId": "2",
+    "name": "Basics Carry-On Travel Backpack, Black",
+    "itemsInStock": 19
+  },
+  {
+    "id": "4",
+    "categoryId": "3",
+    "name": "BLACK+DECKER Dustbuster Cordless Vacuum, 16V (CHV1410L)",
+    "itemsInStock": 95
+  },
+  {
+    "id": "5",
+    "categoryId": "3",
+    "name": "Mr. Clean 440436 Turbo Plunger and Bowl Brush Caddy Set",
+    "itemsInStock": 100
+  },
+  {
+    "id": "6",
+    "categoryId": "3",
+    "name": "Hefty Disposable Plastic Cups in Assorted Colors - 16 Ounce, 100 Count",
+    "itemsInStock": 100
+  },
+  {
+    "id": "7",
+    "categoryId": "4",
+    "name": "Panasonic ErgoFit In-Ear Earbud Headphones RP-HJE120-K (Black) Dynamic Crystal Clear Sound, Ergonomic Comfort-Fit",
+    "itemsInStock": 500
+  },
+  {
+    "id": "8",
+    "categoryId": "4",
+    "name": "SanDisk 32GB Ultra Class 10 SDHC UHS-I Memory Card Up to 80MB, Grey/Black (SDSDUNC-032G-GN6IN)",
+    "itemsInStock": 120
+  },
+  {
+    "id": "9",
+    "categoryId": "5",
+    "name": "Columbia Women's Switchback Iii Adjustable Waterproof Rain Jacket",
+    "itemsInStock": 150
+  }
+]
