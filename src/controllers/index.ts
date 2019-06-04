@@ -1,9 +1,21 @@
-import { Application } from 'express';
-import * as express from 'express';
-import productsController from './products';
+import { Router } from 'express';
+import { router as products } from './products';
+import { router as categories } from './categories';
 
-export function initControllers(app: express.Application) {
-  productsController(app);
+interface RouteConfig {
+  prefix: string;
+  router: Router;
 }
 
-export { productsController };
+const config: { [k: string]: RouteConfig } = {
+  products: {
+    prefix: '/api/products',
+    router: products,
+  },
+  categories: {
+    prefix: '/api/categories',
+    router: categories,
+  },
+};
+
+export { config };

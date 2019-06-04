@@ -1,14 +1,14 @@
-import { send404, send400 } from '../utils/http/http.utils';
+import { send404, send400 } from '../utils/http.utils';
 import { Request, Response, NextFunction } from 'express';
 import { isProductIdNumber } from '../validations/products/products.validation';
-import { setIsRequestedProductExists } from '../utils/products/products.utils';
+import { setIsRequestedProductExists } from '../utils/products.utils';
 
 export function productIdValidator(
   request: Request,
   response: Response,
   next: NextFunction,
 ) {
-  const id = request.params.id;
+  const id = request.params.productId;
   isProductIdNumber(id) ? next() : send400(response);
 }
 

@@ -1,11 +1,10 @@
-import { Product } from '../../models';
-import { store } from '../../store';
+import { store } from '../store';
 import { Request, Response } from 'express';
 
 const products = store.products;
 
 export function setIsRequestedProductExists(request: Request, resposne: Response) {
-  const id = request.params.id;
+  const id = request.params.productId;
 
   if (id) {
     const maybeProduct = findProductById(id);
@@ -15,16 +14,6 @@ export function setIsRequestedProductExists(request: Request, resposne: Response
 
 export function findProductById(id: string) {
   return products.find(product => product.id === id);
-}
-
-export function getNewProductId(
-  productsCount: number,
-  // tslint:disable-next-line: trailing-comma
-  deletedProductIds: string[]
-) {
-  return deletedProductIds.length
-    ? deletedProductIds.shift()
-    : (productsCount + 1).toString();
 }
 
 export function findProductIndex(id: string) {

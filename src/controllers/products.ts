@@ -1,16 +1,17 @@
-import { Application } from 'express';
+import express from 'express';
 import {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct,
+  deleteProduct
 } from '../routes/products';
 
-export default function setup(app: Application) {
-  app.get('/api/products', getProducts);
-  app.get('/api/products/:id', getProductById);
-  app.post('/api/products', createProduct);
-  app.put('/api/products/:id', updateProduct);
-  app.delete('/api/products/:id', deleteProduct);
-}
+const router = express.Router({ mergeParams: true });
+router.get('/', getProducts);
+router.get('/:productId', getProductById);
+router.post('/', createProduct);
+router.put('/:productId', updateProduct);
+router.delete('/:productId', deleteProduct);
+
+export { router };

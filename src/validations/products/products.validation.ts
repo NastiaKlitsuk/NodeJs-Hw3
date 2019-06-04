@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { send404, send400, send409 } from '../../utils/http/http.utils';
+import { send404, send400, send409 } from '../../utils/http.utils';
 
 export function send409ForInvalidProductName(
   productName: string,
