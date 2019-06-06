@@ -6,15 +6,18 @@ import {
   updateCategory,
   deleteCategory
 } from '../routes/categories';
-import { router as products } from './products';
+import { getProducts } from '../routes/products';
+import { validateItemId } from '../middlewares/general.middleware';
+import { validateCategoryExistance } from '../middlewares/categories.middleware';
 
 const router = express.Router();
 
+router.use('/:id', [validateItemId, validateCategoryExistance]);
 router.get('/', getCategories);
-router.get('/:categoryId', getCategoryById);
-router.use('/:categoryId/products', products);
+router.get('/:id', getCategoryById);
+router.get('/:id/products', getProducts);
 router.post('/', createCategory);
-router.put('/:categoryId', updateCategory);
-router.delete('/:categoryId', deleteCategory);
+router.put('/:id', updateCategory);
+router.delete('/:id', deleteCategory);
 
 export { router };

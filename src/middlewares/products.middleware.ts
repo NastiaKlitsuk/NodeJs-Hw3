@@ -1,31 +1,22 @@
-import { send404, send400 } from '../utils/http.utils';
+import { send404, send409 } from '../utils/http.utils';
 import { Request, Response, NextFunction } from 'express';
-import { isProductIdNumber } from '../validations/products/products.validation';
-import { setIsRequestedProductExists } from '../utils/products.utils';
+import { findProductById } from '../utils/products.utils';
+import { Product } from '../models';
 
-export function productIdValidator(
+export function validateProductExistance(
   request: Request,
   response: Response,
   next: NextFunction,
 ) {
-  const id = request.params.productId;
-  isProductIdNumber(id) ? next() : send400(response);
+  const maybeProduct = findProductById(request.params.id);
+  maybeProduct ? next() : send404(response);
 }
 
-export function productExistanceSetter(
+export function validateProductName(
   request: Request,
   response: Response,
   next: NextFunction,
 ) {
-  setIsRequestedProductExists(request, response);
-  next();
-}
-
-export function productExistanceValidator(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) {
-  const isProductExists = response.locals.isProductExists;
-  isProductExists ? next() : send404(response);
+  const product = request.body as Product;
+  return product.name.length < 3 ? send409(response) : next();
 }

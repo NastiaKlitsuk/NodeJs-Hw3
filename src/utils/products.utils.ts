@@ -1,21 +1,12 @@
 import { store } from '../store';
-import { Request, Response } from 'express';
+import { isItemExists, findItemIndex } from './general.utils';
 
 const products = store.products;
 
-export function setIsRequestedProductExists(request: Request, resposne: Response) {
-  const id = request.params.productId;
-
-  if (id) {
-    const maybeProduct = findProductById(id);
-    resposne.locals.isProductExists = !!maybeProduct;
-  }
-}
-
 export function findProductById(id: string) {
-  return products.find(product => product.id === id);
+  return isItemExists(id, products);
 }
 
 export function findProductIndex(id: string) {
-  return products.findIndex(product => product.id === id);
+  return findItemIndex(id, products);
 }

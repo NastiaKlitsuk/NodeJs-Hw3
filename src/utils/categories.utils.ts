@@ -1,11 +1,12 @@
 import { store } from '../store';
+import { isItemExists, findItemIndex } from './general.utils';
 
 const categories = store.categories;
 
 export function findCategoryById(id: string) {
-  return categories.find(category => category.id === id);
+  return isItemExists(id, categories);
 }
 
 export function findCategoryIndex(id: string) {
-  return categories.findIndex(category => category.id === id);
+  return findItemIndex(id, categories);
 }

@@ -7,7 +7,7 @@ interface RouteConfig {
   router: Router;
 }
 
-const config: { [k: string]: RouteConfig } = {
+const config: { [routeName: string]: RouteConfig } = {
   products: {
     prefix: '/api/products',
     router: products,

@@ -6,12 +6,17 @@ import {
   updateProduct,
   deleteProduct
 } from '../routes/products';
+import { validateItemId } from '../middlewares/general.middleware';
+import { validateProductExistance, validateProductName } from '../middlewares/products.middleware';
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
+
+router.use('/:id', [validateItemId, validateProductExistance]);
 router.get('/', getProducts);
-router.get('/:productId', getProductById);
+router.get('/:id', getProductById);
+router.delete('/:id', deleteProduct);
+router.use('/', validateProductName);
 router.post('/', createProduct);
-router.put('/:productId', updateProduct);
-router.delete('/:productId', deleteProduct);
+router.put('/:id', updateProduct);
 
 export { router };

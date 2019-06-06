@@ -1,41 +1,32 @@
 import { store } from '../store';
-import { Request, Response, NextFunction } from 'express';
-import {
-  findProductById,
-  findProductIndex
-} from '../utils/products.utils';
 import { Product } from '../models';
+import { Request, Response } from 'express';
 import { send204 } from '../utils/http.utils';
-import { send409ForInvalidProductName } from '../validations/products/products.validation';
 import { getNewId } from '../utils/general.utils';
+import { findProductById, findProductIndex } from '../utils/products.utils';
 
-export { Product };
+const { products, deletedProductsIds } = store;
 
-const products = store.products;
-const deletedProductsIds = store.deletedProductsIds;
+export function getProducts(request: Request, response: Response) {
+  response.send(products);
+}
 
-export function getProducts(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) {
-  const categoryId = request.params.categoryId;
+export function getProductsByCategory(request: Request, response: Response) {
+  const categoryId = request.params.id;
   const productsByCategoryId = products.filter(
     product => product.categoryId === categoryId,
   );
-  response.send(categoryId ? productsByCategoryId : products);
+  response.send(productsByCategoryId);
 }
 
 export function getProductById(request: Request, response: Response) {
-  const id = request.params.productId;
+  const id = request.params.id;
   const product = findProductById(id);
   response.send(product);
 }
 
 export function createProduct(request: Request, response: Response) {
   const product = request.body as Product;
-
-  if (send409ForInvalidProductName(product.name, response)) return;
 
   product.id = getNewId(products.length, deletedProductsIds) || '';
   products.push(product);
@@ -44,18 +35,16 @@ export function createProduct(request: Request, response: Response) {
 }
 
 export function updateProduct(request: Request, response: Response) {
-  const id = request.params.productId;
+  const id = request.params.id;
   const product = request.body as Product;
-
-  if (send409ForInvalidProductName(product.name, response)) return;
-
   const maybeProduct = findProductById(id);
+
   Object.assign(maybeProduct, product);
   response.send(product);
 }
 
 export function deleteProduct(request: Request, response: Response) {
-  const id = request.params.productId;
+  const id = request.params.id;
   const productToDeleteIndex = findProductIndex(id);
 
   deletedProductsIds.push(id);

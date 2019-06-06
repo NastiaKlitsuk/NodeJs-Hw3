@@ -1,4 +1,5 @@
-export interface Category {
-  id: string;
+import { Identity } from './general';
+
+export interface Category extends Identity {
   name: string;
 }

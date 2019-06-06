@@ -13,8 +13,8 @@ export function getCategories(request: Request, response: Response) {
 }
 
 export function getCategoryById(request: Request, response: Response) {
-  const id = request.params.categoryId;
-  const category = findCategoryById(id);
+  const categoryId = request.params.id;
+  const category = findCategoryById(categoryId);
   response.send(category);
 }
 
@@ -25,25 +25,22 @@ export function createCategory(request: Request, response: Response) {
   categories.push(category);
   response.location(`/api/categories/${category.id}`);
   response.sendStatus(201);
-  console.log(categories);
 }
 
 export function updateCategory(request: Request, response: Response) {
-  const id = request.params.categoryId;
+  const id = request.params.id;
   const category = request.body as Category;
   const maybeCategory = findCategoryById(id);
 
   Object.assign(maybeCategory, category);
   response.send(category);
-  console.log(categories);
 }
 
 export function deleteCategory(request: Request, response: Response) {
-  const id = request.params.categoryId;
+  const id = request.params.id;
   const productToDeleteIndex = findCategoryIndex(id);
 
   deletedCategoriesIds.push(id);
   categories.splice(productToDeleteIndex, 1);
   send204(response);
-  console.log(categories);
 }
