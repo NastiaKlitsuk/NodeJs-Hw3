@@ -11,14 +11,7 @@ export function validateProductExistance(
 ) {
   const productId = request.params.id;
   const maybeProduct = findProductById(productId);
-  maybeProduct
-    ? next()
-    : next(
-        new ResponseValidationError({
-          statusCode: ResponseStatusCode.NotFound,
-          message: `The product ${productId} does not exist.`,
-        }),
-      );
+  maybeProduct ? next() : response.sendStatus(404);
 }
 
 export function validateProductName(

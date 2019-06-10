@@ -6,17 +6,14 @@ import {
   createItem,
   getItemById
 } from './crudHandlers';
+import { wrapAsyncAndSend, wrapAsync } from '../utils/async';
 
 const { products, deletedProductsIds } = store;
 
-export function getProducts(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) {
-  response.status(200).send(products);
-  next();
-}
+export const getProducts = wrapAsyncAndSend(
+  (request: Request, response: Response, next: NextFunction) =>
+    Promise.resolve(products),
+);
 
 export function getProductsByCategory(
   request: Request,
@@ -31,16 +28,17 @@ export function getProductsByCategory(
   next();
 }
 
-export function getProductById(
+export const getProductById = wrapAsync(
+  (request: Request, response: Response, next: NextFunction) =>
+    Promise.resolve(getItemById(request, response, next, products)),
+);
+
+export function createProduct(
   request: Request,
   response: Response,
   next: NextFunction,
 ) {
-  getItemById(request, response, next, products);
-}
-
-export function createProduct(request: Request, response: Response) {
-  createItem(request, response, products, deletedProductsIds);
+  createItem(request, response, next, products, deletedProductsIds);
 }
 
 export function updateProduct(

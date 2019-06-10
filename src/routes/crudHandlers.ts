@@ -1,8 +1,6 @@
-import { ResponseStatusCode } from '../models/error';
 import { Identity } from '../models/general';
 import { Request, Response, NextFunction } from 'express';
 import { findItemIndex, findItemById, getNewId } from '../utils/general.utils';
-import { ResponseValidationError } from '../errors/responseValidationError';
 
 export function deleteItem<T extends Identity>(
   request: Request,
@@ -14,12 +12,7 @@ export function deleteItem<T extends Identity>(
   const itemToDeleteIndex = findItemIndex(id, items);
 
   if (itemToDeleteIndex === -1) {
-    next(
-      new ResponseValidationError({
-        statusCode: ResponseStatusCode.NotFound,
-        message: `The item id ${id} is not found.`,
-      }),
-    );
+    return response.sendStatus(404);
   }
 
   items.splice(itemToDeleteIndex, 1);
@@ -37,12 +30,7 @@ export function updateItem<T extends Identity>(
   const maybeItem = findItemById(id, items);
 
   if (!maybeItem) {
-    next(
-      new ResponseValidationError({
-        statusCode: ResponseStatusCode.NotFound,
-        message: `The item id ${id} is not found.`,
-      }),
-    );
+    return response.sendStatus(404);
   }
 
   const item = request.body;
@@ -55,6 +43,7 @@ export function updateItem<T extends Identity>(
 export function createItem<T extends Identity>(
   request: Request,
   response: Response,
+  next: NextFunction,
   items: T[],
   deletedItemsIds: string[],
 ) {
@@ -63,6 +52,7 @@ export function createItem<T extends Identity>(
   item.id = getNewId(items.length, deletedItemsIds) || '';
   items.push(item);
   response.status(201).send(item);
+  next();
 }
 
 export function getItemById<T extends Identity>(
@@ -75,14 +65,8 @@ export function getItemById<T extends Identity>(
   const item = findItemById(id, items);
 
   if (!item) {
-    next(
-      new ResponseValidationError({
-        statusCode: ResponseStatusCode.NotFound,
-        message: `The item id ${id} is not found.`,
-      }),
-    );
+    return response.sendStatus(404);
   }
 
   response.send(item);
-  next();
 }
