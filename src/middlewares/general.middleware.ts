@@ -1,6 +1,7 @@
-import { send400 } from '../utils/http.utils';
-import { Request, Response, NextFunction } from 'express';
 import { isNumber } from '../utils/general.utils';
+import { ResponseStatusCode } from '../models/error';
+import { Request, Response, NextFunction } from 'express';
+import { ResponseValidationError } from '../errors/responseValidationError';
 
 export function validateItemId(
   request: Request,
@@ -8,5 +9,12 @@ export function validateItemId(
   next: NextFunction,
 ) {
   const id = request.params.id;
-  isNumber(id) ? next() : send400(response);
+  isNumber(id)
+    ? next()
+    : next(
+        new ResponseValidationError({
+          statusCode: ResponseStatusCode.BadRequest,
+          message: `The item ${id} is not a number.`,
+        }),
+      );
 }

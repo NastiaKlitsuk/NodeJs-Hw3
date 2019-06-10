@@ -1,15 +1,24 @@
-import { send404, send409 } from '../utils/http.utils';
+import { Product } from '../models';
 import { Request, Response, NextFunction } from 'express';
 import { findProductById } from '../utils/products.utils';
-import { Product } from '../models';
+import { ResponseStatusCode } from '../models/error';
+import { ResponseValidationError } from '../errors/responseValidationError';
 
 export function validateProductExistance(
   request: Request,
   response: Response,
   next: NextFunction,
 ) {
-  const maybeProduct = findProductById(request.params.id);
-  maybeProduct ? next() : send404(response);
+  const productId = request.params.id;
+  const maybeProduct = findProductById(productId);
+  maybeProduct
+    ? next()
+    : next(
+        new ResponseValidationError({
+          statusCode: ResponseStatusCode.NotFound,
+          message: `The product ${productId} does not exist.`,
+        }),
+      );
 }
 
 export function validateProductName(
@@ -18,5 +27,13 @@ export function validateProductName(
   next: NextFunction,
 ) {
   const product = request.body as Product;
-  return product.name.length < 3 ? send409(response) : next();
+  const productName = product.name;
+  return productName.length >= 3
+    ? next()
+    : next(
+        new ResponseValidationError({
+          statusCode: ResponseStatusCode.Conflict,
+          message: `The product name ${productName} is invalid.`,
+        }),
+      );
 }

@@ -1,53 +1,61 @@
 import { store } from '../store';
-import { Product } from '../models';
-import { Request, Response } from 'express';
-import { send204 } from '../utils/http.utils';
-import { getNewId } from '../utils/general.utils';
-import { findProductById, findProductIndex } from '../utils/products.utils';
+import { Request, Response, NextFunction } from 'express';
+import {
+  deleteItem,
+  updateItem,
+  createItem,
+  getItemById
+} from './crudHandlers';
 
 const { products, deletedProductsIds } = store;
 
-export function getProducts(request: Request, response: Response) {
-  response.send(products);
+export function getProducts(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  response.status(200).send(products);
+  next();
 }
 
-export function getProductsByCategory(request: Request, response: Response) {
+export function getProductsByCategory(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
   const categoryId = request.params.id;
   const productsByCategoryId = products.filter(
     product => product.categoryId === categoryId,
   );
-  response.send(productsByCategoryId);
+  response.status(200).send(productsByCategoryId);
+  next();
 }
 
-export function getProductById(request: Request, response: Response) {
-  const id = request.params.id;
-  const product = findProductById(id);
-  response.send(product);
+export function getProductById(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  getItemById(request, response, next, products);
 }
 
 export function createProduct(request: Request, response: Response) {
-  const product = request.body as Product;
-
-  product.id = getNewId(products.length, deletedProductsIds) || '';
-  products.push(product);
-  response.location(`/api/products/${product.id}`);
-  response.sendStatus(201);
+  createItem(request, response, products, deletedProductsIds);
 }
 
-export function updateProduct(request: Request, response: Response) {
-  const id = request.params.id;
-  const product = request.body as Product;
-  const maybeProduct = findProductById(id);
-
-  Object.assign(maybeProduct, product);
-  response.send(product);
+export function updateProduct(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  updateItem(request, response, next, products);
 }
 
-export function deleteProduct(request: Request, response: Response) {
-  const id = request.params.id;
-  const productToDeleteIndex = findProductIndex(id);
-
-  deletedProductsIds.push(id);
-  products.splice(productToDeleteIndex, 1);
-  send204(response);
+export function deleteProduct(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  deleteItem(request, response, next, products);
+  deletedProductsIds.push(request.params.id);
 }
